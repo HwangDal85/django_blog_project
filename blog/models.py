@@ -14,8 +14,8 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     # author = models.ForeignKey(User, )
     
