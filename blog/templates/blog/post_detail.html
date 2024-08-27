@@ -15,5 +15,11 @@
             {{ post.content|linebreaks }}
         </div>
     </article>
+    
+    <div class="post-actions">
+        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger">Delete</a>
+    </div>
+    
     <p><a href="{% url 'post_list' %}">Back to all posts</a></p>
 {% endblock %}
