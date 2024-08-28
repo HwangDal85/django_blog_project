@@ -15,15 +15,16 @@ def post_list(request):
     q = request.GET.get("q","")
     if q:
         posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
-        return render(request, "blog/post_list.html", {"posts":posts, "q":q})
+    else:
+        posts = Post.objects.all()
     
-    post_list = Post.objects.all().order_by('-created_date')
-    paginator = Paginator(post_list, 10)  # 페이지당 10개 게시글
+    posts = posts.order_by('-created_date')
 
+    paginator = Paginator(posts, 5)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
 
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    return render(request, 'blog/post_list.html', {'posts': posts, "q":q})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
