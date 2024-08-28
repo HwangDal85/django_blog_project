@@ -10,10 +10,7 @@
     <nav>
         <a href="{% url 'home' %}">Home</a>
         <a href="{% url 'post_list' %}">All Posts</a>
-        <form action="" method="get">
-            <input type="text" name="q" placeholder="검색할 단어" value="{{ request.GET.q }}">
-            <input type="submit" value="검색">
-        </form>
+        
         {% if user.is_authenticated %}
         <a href="{% url 'user_logout' %}">로그아웃</a>
         {% else %}

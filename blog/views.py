@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from .models import Post, Category
 from .forms import PostForm
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,10 +13,14 @@ def home(request):
 
 def post_list(request):
     q = request.GET.get("q","")
+    selected_category = request.GET.get("category","")
+
+    posts = Post.objects.all()
+
     if q:
         posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
-    else:
-        posts = Post.objects.all()
+    if selected_category:
+        posts = posts.filter(category_id=selected_category)
     
     posts = posts.order_by('-created_date')
 
@@ -24,7 +28,9 @@ def post_list(request):
     page = request.GET.get('page')
     posts = paginator.get_page(page)
 
-    return render(request, 'blog/post_list.html', {'posts': posts, "q":q})
+    categories = Category.objects.all()
+
+    return render(request, 'blog/post_list.html', {'posts': posts, "q":q, "categories":categories, "selected_category":selected_category})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
