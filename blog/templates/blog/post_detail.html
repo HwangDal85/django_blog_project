@@ -16,10 +16,10 @@
         </div>
     </article>
     
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user == post.author %}
     <div class="post-actions">
-        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">Edit</a>
-        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">수정</a>
+        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger">삭제</a>
     </div>
     {% endif %}
     
