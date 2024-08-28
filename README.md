@@ -31,6 +31,7 @@ gantt
 
     section 이후 블로그 배포 도전
     블로그 배포 도전                :done, 2024-08-31, 2d
+```
 
 # ERD
 # URLs
