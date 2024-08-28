@@ -2,6 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm
 from django.core.paginator import Paginator
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     recent_posts = Post.objects.order_by('-created_date')[:5]
@@ -51,3 +55,29 @@ def post_delete(request, pk):
         post.delete()
         return redirect('post_list')
     return render(request, 'blog/post_confirm_delete.html', {'post': post})
+
+#===============================================
+
+def user_signup(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        email = request.POST.get("email", "")
+
+        if not (username and password):
+            return HttpResponse("이름과 패스워드는 필수입니다")
+        
+        if User.objects.filter(username=username).exists():
+            return HttpResponse("이미 존재하는 사용자입니다")
+        
+        if email and User.objects.filter(email=email).exists():
+            return HttpResponse("이미 존재하는 이메일입니다")
+
+
+        user = User.objects.create_user(username, email, password)
+        user.save()
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('post_list')
+    else:
+        return render(request, "accounts/user_signup.html")
