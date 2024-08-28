@@ -5,8 +5,7 @@
     <ul>
     {% for post in posts %}
         <li>
-            <h3><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h3>
-            <p>{{ post.created_date|date:"Y-m-d" }}</p>
+            <h3><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }} / {{ post.created_date|date:"Y-m-d" }} / {{ post.author }}</a></h3>
         </li>
     {% empty %}
         <li>No posts yet.</li>
