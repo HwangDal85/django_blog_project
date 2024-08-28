@@ -13,6 +13,11 @@
     {% endfor %}
     </ul>
 
+    {% if user.is_authenticated %}
+    <a href="{% url 'post_create' %}">새 글 작성</a>
+    {% endif %}
+
+
     {% if posts.has_other_pages %}
     <div class="pagination">
         {% if posts.has_previous %}

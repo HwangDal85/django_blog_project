@@ -24,6 +24,7 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post':post})
 
+@login_required
 def post_create(request):
     if request.method == "POST": # Post요청 확인
         form = PostForm(request.POST) # PostFrom 인스턴스 생성 인자 전달
@@ -36,6 +37,7 @@ def post_create(request):
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -49,6 +51,7 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'blog/post_form.html', {'form': form})
 
+@login_required
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
