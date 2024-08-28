@@ -13,14 +13,14 @@
             </select>
             <input type="submit" value="검색">
     </form>
-    <h2>All Posts</h2>
+    <h2>게시글 목록</h2>
     <ul>
     {% for post in posts %}
         <li>
             <h3><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }} / {{ post.created_date|date:"Y-m-d" }} / {{ post.author }}</a></h3>
         </li>
     {% empty %}
-        <li>No posts yet.</li>
+        <li>아직 글이 없습니다.</li>
     {% endfor %}
     </ul>
 
@@ -32,7 +32,7 @@
     {% if posts.has_other_pages %}
     <div class="pagination">
         {% if posts.has_previous %}
-            <a href="?q={{ q }}&category={{ selected_category }}&page={{ posts.previous_page_number }}">&laquo; Previous</a>
+            <a href="?q={{ q }}&category={{ selected_category }}&page={{ posts.previous_page_number }}">&laquo; 이전</a>
         {% endif %}
     
         {% for num in posts.paginator.page_range %}
@@ -44,7 +44,7 @@
         {% endfor %}
     
         {% if posts.has_next %}
-            <a href="?q={{ q }}&category={{ selected_category }}&page={{ posts.next_page_number }}">Next &raquo;</a>
+            <a href="?q={{ q }}&category={{ selected_category }}&page={{ posts.next_page_number }}">다음 &raquo;</a>
         {% endif %}
     </div>
     {% endif %}
