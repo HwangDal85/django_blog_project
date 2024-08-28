@@ -1,13 +1,13 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <h2>Welcome to My Blog</h2>
-    <h3>Recent Posts</h3>
+    <h2>달라란에 오신것을 환영합니다!</h2>
+    <h3>최신 글</h3>
     <ul>
     {% for post in recent_post %}
         <li><a href="#">{{ post.title }}</a></li>
     {% empty %}
-        <li>No posts yet.</li>
+        <li>아직 글이 없습니다.</li>
     {% endfor %}
     </ul>
 {% endblock %}

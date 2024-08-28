@@ -44,7 +44,7 @@ def post_edit(request, pk):
         form = PostForm(request.POST, instance=post) # 이미 데이터베이스에 저장된 게시물을 수정 instance = post 기존 Post객체를 폼에 제공
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user  # 현재는 로그인 기능이 없으므로 나중에 구현
+            post.author = request.user
             post.save()
             return redirect('post_detail', pk=post.pk)
     else:
