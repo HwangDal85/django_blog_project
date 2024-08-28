@@ -78,6 +78,26 @@ def user_signup(request):
         user.save()
         user = authenticate(username=username, password=password)
         login(request, user)
-        return redirect('post_list')
+        return redirect('home')
     else:
         return render(request, "accounts/user_signup.html")
+    
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            return render(
+                request, "accounts/user_login.html",
+                {"error":"아이디, 또는 비밀번호가 틀렸습니다"},
+            )
+    else:
+        return render(request, "accounts/user_login.html")
+
+def user_logout(request):
+    logout(request)
+    return redirect("home")
