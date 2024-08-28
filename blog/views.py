@@ -12,6 +12,11 @@ def home(request):
     return render(request, 'blog/home.html', {'recent_posts': recent_posts})
 
 def post_list(request):
+    q = request.GET.get("q","")
+    if q:
+        posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
+        return render(request, "blog/post_list.html", {"posts":posts, "q":q})
+    
     post_list = Post.objects.all().order_by('-created_date')
     paginator = Paginator(post_list, 10)  # 페이지당 10개 게시글
 
