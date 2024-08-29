@@ -148,17 +148,26 @@ def user_profile(request):
 def user_profile_update(request):
     if request.method == "POST":
         form = UserProfileUpdateForm(request.POST, instance=request.user)
-        pass_form = PasswordChangeForm(user=request.user, date=request.POST)
-        if form.is_valid() and pass_form.is_valid():
+        if form.is_valid():
             form.save()
-            user = pass_form.save()
-            update_session_auth_hash(request, user)
             return redirect('user_profile')  # 업데이트 후 프로필 페이지로 리디렉션
     else:
         form = UserProfileUpdateForm(instance=request.user)
-        pass_form = PasswordChangeForm(user=request.user)
 
-    return render(request, 'accounts/user_profile_update.html', {'form': form, 'pass_form':pass_form})
+    return render(request, 'accounts/user_profile_update.html', {'form': form})
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('user_profile')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    
+    return render(request, 'accounts/user_pass_update.html', {'form': form})
 
 #===========================================================
 
