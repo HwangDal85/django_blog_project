@@ -133,3 +133,12 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect("home")
+
+#===========================================================
+
+def comment_delete(request,pk):
+    comment = get_object_or_404(Comment,pk=pk)
+    post = comment.post
+    if request.user == comment.author:
+        comment.delete()
+    return redirect("post_detail", post.pk)

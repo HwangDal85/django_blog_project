@@ -16,10 +16,12 @@
         </div>
     </article>
 
+    <!-- 조회수 -->
     <div>
         <p>조회 : {{ post.view_count }}회</p>
     </div>
 
+    <!-- 댓글 기능관련 -->
     <p>댓글 {{ post.comments.count }}개</p>
     <form action="" method="post">
         {% csrf_token %}
@@ -34,6 +36,14 @@
         <div>
             <p>{{ comment.author }}</p>
             <p>{{ comment.message }}</p>
+            {% if user.is_authenticated and user == comment.author %}
+            <div>
+                <form class="" action="{% url 'comment_delete' comment.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="삭제">
+                </form>
+            </div>
+            {% endif %}
         </div>
     {% endfor %}
     
