@@ -14,11 +14,17 @@
         {% if user.is_authenticated %}
         <a href="{% url 'user_logout' %}">로그아웃</a>
         <a href="{% url 'user_profile' %}">프로필</a>
+            {% if user.first_name %}
+            <p>{{ user.first_name }}님 로그인중</p>
+            {% else %}
+            <p>{{ user }}님 로그인중</p>
+            {% endif %}
         {% else %}
         <a href="{% url 'user_login' %}">로그인</a>
         <a href="{% url 'user_signup' %}">회원가입</a>
         {% endif %}
     </nav>
+    
     <main>
         {% block content %}
         {% endblock %}
