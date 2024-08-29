@@ -134,6 +134,10 @@ def user_logout(request):
     logout(request)
     return redirect("home")
 
+@login_required
+def user_profile(request):
+    return render(request, "accounts/user_profile.html", {"user": request.user})
+
 #===========================================================
 
 def comment_delete(request,pk):
