@@ -1,3 +1,7 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
 <form action="" method="post">
     {% csrf_token %}
     <label for="username_id">아이디</label>
@@ -11,3 +15,5 @@
 
     <button type="submit">회원가입</button>
 </form>
+
+{% endblock %}
