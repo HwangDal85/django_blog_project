@@ -15,7 +15,30 @@
             {{ post.content|linebreaks }}
         </div>
     </article>
+
+    <div>
+        <p>조회 : {{ post.view_count }}회</p>
+    </div>
+
+    <p>댓글 {{ post.comments.count }}개</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="id_message">댓글 작성</label>
+        </div>
+        <textarea name="message" id="id_message"></textarea>
+        <input type="submit" value="작성">
+    </form>
+
+    {% for comment in post.comments.all %}
+        <div>
+            <p>{{ comment.author }}</p>
+            <p>{{ comment.message }}</p>
+        </div>
+    {% endfor %}
     
+
+    <!-- 로그인 인증 -->
     {% if user.is_authenticated and user == post.author %}
     <div class="post-actions">
         <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-primary">수정</a>
@@ -24,5 +47,6 @@
     </div>
     {% endif %}
     
+    <!-- 목록으로 -->
     <p><a href="{% url 'post_list' %}">게시글 목록으로</a></p>
 {% endblock %}

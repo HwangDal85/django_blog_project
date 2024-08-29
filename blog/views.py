@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Category
-from .forms import PostForm
+from .models import Post, Category, Comment
+from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -34,7 +34,24 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post':post})
+    form = CommentForm()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            author = request.user
+            message = form.cleaned_data["message"]
+            c = Comment.objects.create(post=post, author=author, message=message)
+            c.save()
+    
+    else:
+        post.view_count += 1
+        post.save()
+    return render(
+        request,
+        "blog/post_detail.html",
+        {"post":post, "form":form},
+    )
 
 @login_required
 def post_create(request):

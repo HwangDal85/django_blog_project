@@ -10,3 +10,6 @@ class PostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class CommentForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
