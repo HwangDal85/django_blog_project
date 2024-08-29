@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post, Category, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
@@ -111,7 +111,7 @@ def user_signup(request):
         user.first_name = nickname
         user.save()
 
-        
+
         user = authenticate(username=username, password=password)
         login(request, user)
         return redirect('home')
@@ -141,6 +141,18 @@ def user_logout(request):
 @login_required
 def user_profile(request):
     return render(request, "accounts/user_profile.html", {"user": request.user})
+
+@login_required
+def user_profile_update(request):
+    if request.method == "POST":
+        form = UserProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')  # 업데이트 후 프로필 페이지로 리디렉션
+    else:
+        form = UserProfileUpdateForm(instance=request.user)
+
+    return render(request, 'accounts/user_profile_update.html', {'form': form})
 
 #===========================================================
 
