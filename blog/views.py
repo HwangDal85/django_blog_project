@@ -4,8 +4,10 @@ from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 def home(request):
     recent_posts = Post.objects.order_by('-created_date')[:5]
@@ -146,13 +148,17 @@ def user_profile(request):
 def user_profile_update(request):
     if request.method == "POST":
         form = UserProfileUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
+        pass_form = PasswordChangeForm(user=request.user, date=request.POST)
+        if form.is_valid() and pass_form.is_valid():
             form.save()
+            user = pass_form.save()
+            update_session_auth_hash(request, user)
             return redirect('user_profile')  # 업데이트 후 프로필 페이지로 리디렉션
     else:
         form = UserProfileUpdateForm(instance=request.user)
+        pass_form = PasswordChangeForm(user=request.user)
 
-    return render(request, 'accounts/user_profile_update.html', {'form': form})
+    return render(request, 'accounts/user_profile_update.html', {'form': form, 'pass_form':pass_form})
 
 #===========================================================
 
