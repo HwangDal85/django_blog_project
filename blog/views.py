@@ -95,6 +95,7 @@ def user_signup(request):
         username = request.POST["username"]
         password = request.POST["password"]
         email = request.POST.get("email", "")
+        nickname = request.POST.get("nickname","")
 
         if not (username and password):
             return HttpResponse("이름과 패스워드는 필수입니다")
@@ -107,7 +108,10 @@ def user_signup(request):
 
 
         user = User.objects.create_user(username, email, password)
+        user.first_name = nickname
         user.save()
+
+        
         user = authenticate(username=username, password=password)
         login(request, user)
         return redirect('home')

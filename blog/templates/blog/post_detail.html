@@ -34,7 +34,11 @@
 
     {% for comment in post.comments.all %}
         <div>
+            {% if comment.author.first_name %}
+            <p>{{ comment.author.first_name }}</p>
+            {% else %}
             <p>{{ comment.author }}</p>
+            {% endif %}
             <p>{{ comment.message }}</p>
             {% if user.is_authenticated and user == comment.author %}
             <div>
