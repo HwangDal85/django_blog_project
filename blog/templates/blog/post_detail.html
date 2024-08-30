@@ -19,6 +19,11 @@
             {% endif %}
             {{ post.content|linebreaks }}
         </div>
+        <div class="tags">
+            {% for tag in post.tags.all %}
+                <p>Tags : {{ tag.name }}</p>
+            {% endfor %}
+        </div>
     </article>
 
     <!-- 조회수 -->

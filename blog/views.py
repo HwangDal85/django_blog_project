@@ -63,6 +63,7 @@ def post_create(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
@@ -77,6 +78,7 @@ def post_edit(request, pk):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
@@ -89,6 +91,10 @@ def post_delete(request, pk):
         post.delete()
         return redirect('post_list')
     return render(request, 'blog/post_confirm_delete.html', {'post': post})
+
+def blog_tag(request, tag):
+    posts = Post.objects.filter(tags__name__iexact=tag)
+    return render(request, "blog/post_list.html", {"posts":posts})
 
 #===============================================
 

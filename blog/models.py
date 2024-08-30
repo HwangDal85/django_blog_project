@@ -16,7 +16,7 @@ class Post(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    # tags = models.ManyToManyField("Tag", blank=True)
+    tags = models.ManyToManyField("Tag", blank=True)
     view_count = models.IntegerField(default=0)
     image = models.ImageField(upload_to='blog/image/%Y/%m/%d/', blank=True, null=True)
     
@@ -34,8 +34,8 @@ class Comment(models.Model):
     def __str__(self):
         return self.message
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=50, unique=True)
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
