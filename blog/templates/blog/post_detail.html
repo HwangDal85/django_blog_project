@@ -20,9 +20,12 @@
             {{ post.content|linebreaks }}
         </div>
         <div class="tags">
-            {% for tag in post.tags.all %}
-                <p>Tags : {{ tag.name }}</p>
-            {% endfor %}
+            <p>
+                Tags :
+                {% for tag in post.tags.all %}
+                    {{ tag.name }}
+                {% endfor %}
+            </p>
         </div>
     </article>
 
