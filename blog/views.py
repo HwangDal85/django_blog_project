@@ -156,7 +156,7 @@ def user_profile_update(request):
         form = UserProfileUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('user_profile')  # 업데이트 후 프로필 페이지로 리디렉션
+            return redirect('user_profile')
     else:
         form = UserProfileUpdateForm(instance=request.user)
 

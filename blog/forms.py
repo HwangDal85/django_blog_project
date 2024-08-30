@@ -18,7 +18,7 @@ class CommentForm(forms.Form):
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'first_name']  # 사용자가 수정할 수 있는 필드들
+        fields = ['email', 'first_name']
         labels = {
-            'first_name': '닉네임',  # first_name을 닉네임으로 표시
+            'first_name': '닉네임',
         }
