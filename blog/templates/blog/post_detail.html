@@ -12,6 +12,11 @@
             {% endif %}
         </p>
         <div class="content">
+            {% if post.image %}
+            <div>
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            </div>
+            {% endif %}
             {{ post.content|linebreaks }}
         </div>
     </article>
