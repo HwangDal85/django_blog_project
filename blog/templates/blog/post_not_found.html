@@ -1,0 +1,7 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<h2>게시글이 존재하지 않습니다</h2>
+<p>요청하신 게시글이 존재하지 않거나, 삭제되었습니다.</p>
+<a href="{% url 'post_list' %}">목록으로 돌아가기</a>
+{% endblock %}

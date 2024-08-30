@@ -35,7 +35,11 @@ def post_list(request):
     return render(request, 'blog/post_list.html', {'posts': posts, "q":q, "categories":categories, "selected_category":selected_category})
 
 def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return redirect('post_not_found')
+    
     form = CommentForm()
 
     if request.method == 'POST':
@@ -96,6 +100,8 @@ def blog_tag(request, tag):
     posts = Post.objects.filter(tags__name__iexact=tag)
     return render(request, "blog/post_list.html", {"posts":posts})
 
+def post_not_found(request):
+    return render(request, 'blog/post_not_found.html')
 #===============================================
 
 def user_signup(request):
