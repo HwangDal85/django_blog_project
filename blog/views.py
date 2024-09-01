@@ -11,14 +11,12 @@ from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic.edit import FormMixin
 
-# Home View
 class HomeView(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'recent_posts'
     queryset = Post.objects.order_by('-created_date')[:5]
 
-# Post List View
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -50,7 +48,6 @@ class PostListView(ListView):
         context['selected_tag'] = self.request.GET.get("tag", "")
         return context
 
-# Post Detail View
 class PostDetailView(FormMixin, DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
@@ -85,7 +82,6 @@ class PostDetailView(FormMixin, DetailView):
         context['form'] = self.get_form()
         return context
 
-# Post Create View
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -98,7 +94,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         form.save_m2m()  # Save ManyToMany field
         return redirect('post_detail', pk=post.pk)
 
-# Post Update View
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
@@ -111,13 +106,11 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         form.save_m2m()
         return redirect('post_detail', pk=post.pk)
 
-# Post Delete View
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('post_list')
 
-# Blog Tag View
 class BlogTagView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -126,7 +119,6 @@ class BlogTagView(ListView):
     def get_queryset(self):
         return Post.objects.filter(tags__name__iexact=self.kwargs['tag'])
 
-# Tag Search View
 class TagSearchView(ListView):
     model = Post
     template_name = 'blog/tag_search.html'
@@ -146,11 +138,11 @@ class TagSearchView(ListView):
         context['selected_tags'] = self.request.GET.getlist('tags')
         return context
 
-# Post Not Found View
 class PostNotFoundView(TemplateView):
     template_name = 'blog/post_not_found.html'
 
-# User Signup View
+#==============================================================
+
 class UserSignupView(FormView):
     template_name = 'accounts/user_signup.html'
     success_url = reverse_lazy('home')
@@ -169,7 +161,6 @@ class UserSignupView(FormView):
         login(self.request, user)
         return super().form_valid(form)
 
-# User Login View
 class UserLoginView(FormView):
     template_name = 'accounts/user_login.html'
     success_url = reverse_lazy('home')
@@ -183,8 +174,7 @@ class UserLoginView(FormView):
         else:
             return self.form_invalid(form)
         return super().form_valid(form)
-
-# User Logout View
+    
 class UserLogoutView(LoginRequiredMixin, RedirectView):
     url = reverse_lazy('home')
 
@@ -192,11 +182,9 @@ class UserLogoutView(LoginRequiredMixin, RedirectView):
         logout(request)
         return super().get(request, *args, **kwargs)
 
-# User Profile View
 class UserProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/user_profile.html'
 
-# User Profile Update View
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileUpdateForm
@@ -206,7 +194,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user
 
-# Change Password View
 class ChangePasswordView(LoginRequiredMixin, FormView):
     template_name = 'accounts/user_pass_update.html'
     form_class = PasswordChangeForm
@@ -222,7 +209,8 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
         kwargs['user'] = self.request.user
         return kwargs
 
-# Comment Delete View
+#============================================================
+
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = 'blog/comment_confirm_delete.html'
