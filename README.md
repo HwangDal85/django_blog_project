@@ -79,3 +79,21 @@ erDiagram
     Post }o--|{ Tag : "tags"
 ```
 # URLs
+
+|위치 | URL Pattern                       | View Name            | Description                                        |
+|---------|-----------------------------------|----------------------|----------------------------------------------------|
+|blog/    | `/`                               | `home`               | 메인 페이지                                         |
+|         | `/post/`                          | `post_list`          | 게시물 목록                                         |
+|         | `/post/tag-search`                | `tag_search`         | 태그별 검색                                         |
+|         | `/post/<int:pk>/`                 | `post_detail`        | 게시물 상세                                         |
+|         | `/post/new/`                      | `post_create`        | 게시물 작성                                         |
+|         | `/post/<int:pk>/edit/`            | `post_edit`          | 게시물 수정                                         |
+|         | `/post/<int:pk>/delete/`          | `post_delete`        | 게시물 삭제                                         |
+|         | `/post/<int:pk>/comment_delete/`  | `comment_delete`     | 댓글 삭제                                           |
+|         | `/post-not-found/`                | `post_not_found`     | 게시물을 찾을 수 없는 경우 표시                      |
+|accounts/| `/signup/`                        | `user_signup`        | 회원가입                                            |
+|         | `/login/`                         | `user_login`         | 로그인 페이지                                       |
+|         | `/logout/`                        | `user_logout`        | 로그아웃                                            |
+|         | `/profile/`                       | `user_profile`       | 유저 프로필                                         |
+|         | `/profile/update/`                | `user_profile_update`| 프로필 정보 수정                                    |
+|         | `/profile/pass_update/`           | `user_pass_update`   | 비밀번호 변경                                       |
