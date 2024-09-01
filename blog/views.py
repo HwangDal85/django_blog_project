@@ -195,7 +195,7 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user
 
-class ChangePasswordView(LoginRequiredMixin, FormView):
+class UserPassUpdateView(LoginRequiredMixin, FormView):
     template_name = 'accounts/user_pass_update.html'
     form_class = PasswordChangeForm
     success_url = reverse_lazy('user_profile')

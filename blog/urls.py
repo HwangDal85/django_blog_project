@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     HomeView, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
     BlogTagView, TagSearchView, PostNotFoundView,
-    UserSignupView, UserLoginView, UserLogoutView, UserProfileView, UserProfileUpdateView, ChangePasswordView,
+    UserSignupView, UserLoginView, UserLogoutView, UserProfileView, UserProfileUpdateView, UserPassUpdateView,
     CommentDeleteView
 )
 from django.conf import settings
@@ -24,7 +24,7 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='user_logout'),
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('profile/update/', UserProfileUpdateView.as_view(), name='user_profile_update'),
-    path('profile/pass_update/', ChangePasswordView.as_view(), name='user_pass_update'),
+    path('profile/pass_update/', UserPassUpdateView.as_view(), name='user_pass_update'),
 ]
 
 if settings.DEBUG:
