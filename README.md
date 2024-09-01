@@ -34,4 +34,48 @@ gantt
 ```
 
 # ERD
+
+```mermaid
+erDiagram
+    User {
+        int id PK
+        string username
+        string email
+        string password
+        string first_name(nickname)
+    }
+    
+    Category {
+        int id PK
+        string name
+    }
+
+    Post {
+        int id PK
+        string title
+        text content
+        datetime created_date
+        datetime updated_date
+        int view_count
+        string image
+    }
+
+    Comment {
+        int id PK
+        text message
+        datetime created_at
+        datetime updated_at
+    }
+
+    Tag {
+        int id PK
+        string name
+    }
+
+    User ||--o{ Post : "writes"
+    User ||--o{ Comment : "writes"
+    Category ||--o{ Post : "categorizes"
+    Post ||--o{ Comment : "has"
+    Post }o--|{ Tag : "tags"
+```
 # URLs
