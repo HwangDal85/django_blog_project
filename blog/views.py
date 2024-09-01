@@ -145,6 +145,7 @@ class PostNotFoundView(TemplateView):
 
 class UserSignupView(FormView):
     template_name = 'accounts/user_signup.html'
+    form_class = AuthenticationForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
