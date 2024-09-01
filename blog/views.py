@@ -17,7 +17,6 @@ def home(request):
 def post_list(request):
     q = request.GET.get("q","")
     selected_category = request.GET.get("category","")
-    selected_tag = request.GET.get("tag","")
 
     posts = Post.objects.all()
 
@@ -25,8 +24,6 @@ def post_list(request):
         posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
     if selected_category:
         posts = posts.filter(category_id=selected_category)
-    if selected_tag:
-        posts = posts.filter(tags__name__iexact=selected_tag)
     
     posts = posts.order_by('-created_date')
 
@@ -41,8 +38,7 @@ def post_list(request):
         'posts': posts, 
         "q":q, 
         "categories":categories, "selected_category":selected_category,
-        "tags": tags,
-        "selected_tag": selected_tag})
+        })
 
 def post_detail(request, pk):
     try:
@@ -119,6 +115,7 @@ def tag_search(request):
     if selected_tags:
         posts = posts.filter(tags__name__in=selected_tags).distinct()
 
+    posts = posts.order_by('-created_date')
 
     paginator = Paginator(posts, 5)
     page = request.GET.get('page')
