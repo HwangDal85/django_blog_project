@@ -112,17 +112,13 @@ def blog_tag(request, tag):
 
 def tag_search(request):
     tags = Tag.objects.all()
-    categories = Category.objects.all()
     selected_tags = request.GET.getlist('tags')
-    selected_category = request.GET.get('category')
     
     posts = Post.objects.all()
 
     if selected_tags:
         posts = posts.filter(tags__name__in=selected_tags).distinct()
-    
-    if selected_category:
-        posts = posts.filter(category_id=selected_category)
+
 
     paginator = Paginator(posts, 5)
     page = request.GET.get('page')
@@ -130,9 +126,7 @@ def tag_search(request):
     
     return render(request, 'blog/tag_search.html', {
         'tags': tags,
-        'categories': categories,
         'selected_tags': selected_tags,
-        'selected_category': selected_category,
         'posts': posts,
     })
 

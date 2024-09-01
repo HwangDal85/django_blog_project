@@ -36,20 +36,20 @@
     {% if posts.has_other_pages %}
     <div class="pagination">
         {% if posts.has_previous %}
-            <a href="?page={{ posts.previous_page_number }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}{% if selected_category %}&category={{ selected_category }}{% endif %}">&laquo; 이전</a>
+            <a href="?page={{ posts.previous_page_number }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}">&laquo; 이전</a>
         {% endif %}
 
         {% for num in posts.paginator.page_range %}
             {% if posts.number == num %}
                 <strong>{{ num }}</strong>
             {% else %}
-                <a href="?page={{ num }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                <a href="?page={{ num }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}">{{ num }}</a>
             {% endif %}
         {% endfor %}
 
         {% if posts.has_next %}
-            <a href="?page={{ posts.next_page_number }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}{% if selected_category %}&category={{ selected_category }}{% endif %}">다음 &raquo;</a>
+            <a href="?page={{ posts.next_page_number }}{% for tag in selected_tags %}&tags={{ tag }}{% endfor %}">다음 &raquo;</a>
         {% endif %}
     </div>
-    {% endif %}
+{% endif %}
 {% endblock %}
