@@ -1,218 +1,237 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Category, Comment, Tag
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView, RedirectView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.db.models import Q
-from .forms import PostForm, CommentForm, UserProfileUpdateForm
-from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from .models import Post, Category, Comment, Tag
+from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.contrib.auth.forms import PasswordChangeForm
+from django.views.generic.edit import FormMixin
 
+# Home View
+class HomeView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'recent_posts'
+    queryset = Post.objects.order_by('-created_date')[:5]
 
-def home(request):
-    recent_posts = Post.objects.order_by('-created_date')[:5]
-    return render(request, 'blog/home.html', {'recent_posts': recent_posts})
+# Post List View
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 5
 
-def post_list(request):
-    q = request.GET.get("q","")
-    selected_category = request.GET.get("category","")
+    def get_queryset(self):
+        q = self.request.GET.get("q", "")
+        selected_category = self.request.GET.get("category", "")
+        selected_tag = self.request.GET.get("tag", "")
 
-    posts = Post.objects.all()
+        posts = Post.objects.all()
 
-    if q:
-        posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
-    if selected_category:
-        posts = posts.filter(category_id=selected_category)
-    
-    posts = posts.order_by('-created_date')
+        if q:
+            posts = posts.filter(Q(title__icontains=q) | Q(content__icontains=q))
+        if selected_category:
+            posts = posts.filter(category_id=selected_category)
+        if selected_tag:
+            posts = posts.filter(tags__name__iexact=selected_tag)
+        
+        return posts.order_by('-created_date')
 
-    paginator = Paginator(posts, 5)
-    page = request.GET.get('page')
-    posts = paginator.get_page(page)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET.get("q", "")
+        context['categories'] = Category.objects.all()
+        context['selected_category'] = self.request.GET.get("category", "")
+        context['tags'] = Tag.objects.all()
+        context['selected_tag'] = self.request.GET.get("tag", "")
+        return context
 
-    categories = Category.objects.all()
-    tags = Tag.objects.all()
+# Post Detail View
+class PostDetailView(FormMixin, DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
+    form_class = CommentForm
 
-    return render(request, 'blog/post_list.html', {
-        'posts': posts, 
-        "q":q, 
-        "categories":categories, "selected_category":selected_category,
-        })
+    def get_object(self, queryset=None):
+        try:
+            return Post.objects.get(pk=self.kwargs['pk'])
+        except Post.DoesNotExist:
+            return redirect('post_not_found')
 
-def post_detail(request, pk):
-    try:
-        post = Post.objects.get(pk=pk)
-    except Post.DoesNotExist:
-        return redirect('post_not_found')
-    
-    form = CommentForm()
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
         if form.is_valid():
-            author = request.user
-            message = form.cleaned_data["message"]
-            c = Comment.objects.create(post=post, author=author, message=message)
-            c.save()
-    
-    else:
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.post = self.get_object()
+        comment.author = self.request.user
+        comment.save()
+        return redirect('post_detail', pk=comment.post.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
         post.view_count += 1
         post.save()
-    return render(
-        request,
-        "blog/post_detail.html",
-        {"post":post, "form":form},
-    )
+        context['form'] = self.get_form()
+        return context
 
-@login_required
-def post_create(request):
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            form.save_m2m()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm()
-    return render(request, 'blog/post_form.html', {'form': form})
+# Post Create View
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
 
-@login_required
-def post_edit(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            form.save_m2m()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_form.html', {'form': form})
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.author = self.request.user
+        post.save()
+        form.save_m2m()  # Save ManyToMany field
+        return redirect('post_detail', pk=post.pk)
 
-@login_required
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        post.delete()
-        return redirect('post_list')
-    return render(request, 'blog/post_confirm_delete.html', {'post': post})
+# Post Update View
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
 
-def blog_tag(request, tag):
-    posts = Post.objects.filter(tags__name__iexact=tag)
-    return render(request, "blog/post_list.html", {"posts":posts})
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.author = self.request.user
+        post.save()
+        form.save_m2m()
+        return redirect('post_detail', pk=post.pk)
 
-def tag_search(request):
-    tags = Tag.objects.all()
-    selected_tags = request.GET.getlist('tags')
-    
-    posts = Post.objects.all()
+# Post Delete View
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('post_list')
 
-    if selected_tags:
-        posts = posts.filter(tags__name__in=selected_tags).distinct()
+# Blog Tag View
+class BlogTagView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
 
-    posts = posts.order_by('-created_date')
+    def get_queryset(self):
+        return Post.objects.filter(tags__name__iexact=self.kwargs['tag'])
 
-    paginator = Paginator(posts, 5)
-    page = request.GET.get('page')
-    posts = paginator.get_page(page)
-    
-    return render(request, 'blog/tag_search.html', {
-        'tags': tags,
-        'selected_tags': selected_tags,
-        'posts': posts,
-    })
+# Tag Search View
+class TagSearchView(ListView):
+    model = Post
+    template_name = 'blog/tag_search.html'
+    context_object_name = 'posts'
+    paginate_by = 5
 
-def post_not_found(request):
-    return render(request, 'blog/post_not_found.html')
-#===============================================
+    def get_queryset(self):
+        selected_tags = self.request.GET.getlist('tags')
+        posts = Post.objects.all()
+        if selected_tags:
+            posts = posts.filter(tags__name__in=selected_tags).distinct()
+        return posts
 
-def user_signup(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        email = request.POST.get("email", "")
-        nickname = request.POST.get("nickname","")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
+        context['selected_tags'] = self.request.GET.getlist('tags')
+        return context
 
-        if not (username and password):
-            return HttpResponse("이름과 패스워드는 필수입니다")
-        
-        if User.objects.filter(username=username).exists():
-            return HttpResponse("이미 존재하는 사용자입니다")
-        
-        if email and User.objects.filter(email=email).exists():
-            return HttpResponse("이미 존재하는 이메일입니다")
+# Post Not Found View
+class PostNotFoundView(TemplateView):
+    template_name = 'blog/post_not_found.html'
 
+# User Signup View
+class UserSignupView(FormView):
+    template_name = 'accounts/user_signup.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        email = form.cleaned_data.get('email', "")
+        nickname = form.cleaned_data.get('nickname', "")
 
         user = User.objects.create_user(username, email, password)
         user.first_name = nickname
         user.save()
 
-
         user = authenticate(username=username, password=password)
-        login(request, user)
-        return redirect('home')
-    else:
-        return render(request, "accounts/user_signup.html")
-    
-def user_login(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+        login(self.request, user)
+        return super().form_valid(form)
+
+# User Login View
+class UserLoginView(FormView):
+    template_name = 'accounts/user_login.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect("home")
+            login(self.request, user)
         else:
-            return render(
-                request, "accounts/user_login.html",
-                {"error":"아이디, 또는 비밀번호가 틀렸습니다"},
-            )
-    else:
-        return render(request, "accounts/user_login.html")
+            return self.form_invalid(form)
+        return super().form_valid(form)
 
-def user_logout(request):
-    logout(request)
-    return redirect("home")
+# User Logout View
+class UserLogoutView(LoginRequiredMixin, RedirectView):
+    url = reverse_lazy('home')
 
-@login_required
-def user_profile(request):
-    return render(request, "accounts/user_profile.html", {"user": request.user})
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super().get(request, *args, **kwargs)
 
-@login_required
-def user_profile_update(request):
-    if request.method == "POST":
-        form = UserProfileUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile')
-    else:
-        form = UserProfileUpdateForm(instance=request.user)
+# User Profile View
+class UserProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/user_profile.html'
 
-    return render(request, 'accounts/user_profile_update.html', {'form': form})
+# User Profile Update View
+class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserProfileUpdateForm
+    template_name = 'accounts/user_profile_update.html'
+    success_url = reverse_lazy('user_profile')
 
-@login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            return redirect('user_profile')
-    else:
-        form = PasswordChangeForm(user=request.user)
-    
-    return render(request, 'accounts/user_pass_update.html', {'form': form})
+    def get_object(self):
+        return self.request.user
 
-#===========================================================
+# Change Password View
+class ChangePasswordView(LoginRequiredMixin, FormView):
+    template_name = 'accounts/user_pass_update.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('user_profile')
 
-def comment_delete(request,pk):
-    comment = get_object_or_404(Comment,pk=pk)
-    post = comment.post
-    if request.user == comment.author:
-        comment.delete()
-    return redirect("post_detail", post.pk)
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+# Comment Delete View
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user == self.object.author:
+            return super().delete(request, *args, **kwargs)
+        return redirect(self.get_success_url())
