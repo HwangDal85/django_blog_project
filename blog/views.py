@@ -123,6 +123,10 @@ def tag_search(request):
     
     if selected_category:
         posts = posts.filter(category_id=selected_category)
+
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
     
     return render(request, 'blog/tag_search.html', {
         'tags': tags,
