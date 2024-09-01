@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.core.paginator import Paginator
 from .models import Post, Category, Comment, Tag
 from .forms import PostForm, CommentForm, UserProfileUpdateForm
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
 from django.views.generic.edit import FormMixin
 
 class HomeView(ListView):
@@ -163,6 +163,7 @@ class UserSignupView(FormView):
 
 class UserLoginView(FormView):
     template_name = 'accounts/user_login.html'
+    form_class = AuthenticationForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
