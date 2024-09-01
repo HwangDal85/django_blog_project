@@ -1,0 +1,35 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>태그 검색</h2>
+    <form method="get" action="{% url 'tag_search' %}">
+        {% for tag in tags %}
+            <label>
+                <input type="checkbox" name="tags" value="{{ tag.name }}"
+                       {% if tag.name in selected_tags %}checked{% endif %}>
+                {{ tag.name }}
+            </label>
+        {% endfor %}
+        <input type="submit" value="검색">
+    </form>
+
+    <h3>검색 결과</h3>
+    {% if selected_tags %}
+        <p>선택된 태그: {{ selected_tags|join:", " }}</p>
+    {% endif %}
+
+    <ul>
+    {% for post in posts %}
+        <li>
+            <h4><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }} / {{ post.created_date|date:"Y-m-d" }} / {{ post.author }}</a></h4>
+            <p>태그: 
+            {% for tag in post.tags.all %}
+                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        </li>
+    {% empty %}
+        <li>검색 결과가 없습니다.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

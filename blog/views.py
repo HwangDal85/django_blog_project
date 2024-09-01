@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment, Tag
+from django.db.models import Q
 from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
@@ -16,6 +17,7 @@ def home(request):
 def post_list(request):
     q = request.GET.get("q","")
     selected_category = request.GET.get("category","")
+    selected_tag = request.GET.get("tag","")
 
     posts = Post.objects.all()
 
@@ -23,6 +25,8 @@ def post_list(request):
         posts = Post.objects.filter(title__icontains=q).order_by('-created_date')| Post.objects.filter(content__icontains=q).order_by('-created_date')
     if selected_category:
         posts = posts.filter(category_id=selected_category)
+    if selected_tag:
+        posts = posts.filter(tags__name__iexact=selected_tag)
     
     posts = posts.order_by('-created_date')
 
@@ -31,8 +35,14 @@ def post_list(request):
     posts = paginator.get_page(page)
 
     categories = Category.objects.all()
+    tags = Tag.objects.all()
 
-    return render(request, 'blog/post_list.html', {'posts': posts, "q":q, "categories":categories, "selected_category":selected_category})
+    return render(request, 'blog/post_list.html', {
+        'posts': posts, 
+        "q":q, 
+        "categories":categories, "selected_category":selected_category,
+        "tags": tags,
+        "selected_tag": selected_tag})
 
 def post_detail(request, pk):
     try:
@@ -99,6 +109,28 @@ def post_delete(request, pk):
 def blog_tag(request, tag):
     posts = Post.objects.filter(tags__name__iexact=tag)
     return render(request, "blog/post_list.html", {"posts":posts})
+
+def tag_search(request):
+    tags = Tag.objects.all()
+    categories = Category.objects.all()
+    selected_tags = request.GET.getlist('tags')
+    selected_category = request.GET.get('category')
+    
+    posts = Post.objects.all()
+
+    if selected_tags:
+        posts = posts.filter(tags__name__in=selected_tags).distinct()
+    
+    if selected_category:
+        posts = posts.filter(category_id=selected_category)
+    
+    return render(request, 'blog/tag_search.html', {
+        'tags': tags,
+        'categories': categories,
+        'selected_tags': selected_tags,
+        'selected_category': selected_category,
+        'posts': posts,
+    })
 
 def post_not_found(request):
     return render(request, 'blog/post_not_found.html')
