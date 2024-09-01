@@ -2,12 +2,5 @@
 
 {% block content %}
     <h2>달라란에 오신것을 환영합니다!</h2>
-    <h3>최신 글</h3>
-    <ul>
-    {% for post in recent_post %}
-        <li><a href="#">{{ post.title }}</a></li>
-    {% empty %}
-        <li>아직 글이 없습니다.</li>
-    {% endfor %}
-    </ul>
+    <h3>상단 링크를 눌러 원하는 페이지로 이동하세요.</h3>
 {% endblock %}
