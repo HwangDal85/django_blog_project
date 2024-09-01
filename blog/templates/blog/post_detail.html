@@ -14,7 +14,7 @@
         <div class="content">
             {% if post.image %}
             <div>
-                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 900px; height: auto; display: block; margin: 0 auto;">
             </div>
             {% endif %}
             {{ post.content|linebreaks }}
