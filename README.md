@@ -100,3 +100,8 @@ erDiagram
 |         | `/profile/`                       | `UserProfileView`       | 유저 프로필                                         |
 |         | `/profile/update/`                | `UserProfileUpdateView` | 프로필 정보 수정                                    |
 |         | `/profile/pass_update/`           | `UserPassUpdateView`    | 비밀번호 변경                                       |
+
+
+# WireFrame
+
+![wireframe](.\blogproj\media\img\wireframe.PNG)
