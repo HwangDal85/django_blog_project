@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Category
+from .models import Post, Comment
 from django.contrib.auth.models import User
 
 class PostForm(forms.ModelForm):
@@ -12,8 +12,10 @@ class PostForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
-class CommentForm(forms.Form):
-    message = forms.CharField(widget=forms.Textarea)
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['message']
 
 class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
