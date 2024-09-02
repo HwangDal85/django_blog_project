@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.core.paginator import Paginator
 from .models import Post, Category, Comment, Tag
 from .forms import PostForm, CommentForm, UserProfileUpdateForm
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
