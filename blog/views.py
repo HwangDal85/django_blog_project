@@ -13,8 +13,6 @@ from django.views.generic.edit import FormMixin
 class HomeView(ListView):
     model = Post
     template_name = 'blog/home.html'
-    context_object_name = 'recent_posts'
-    queryset = Post.objects.order_by('-created_date')[:5]
 
 class PostListView(ListView):
     model = Post
