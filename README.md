@@ -1,5 +1,8 @@
 # django blog project
 
+ Django를 이용하여 실제로 사용 가능한 Blog를 만들어보자.
+ 본 프로젝트에서는 다양한 사람이 자신이 좋아하는 게임에 관련된 이야기를 할 수 있는 페이지를 만들어 보자.
+
 # WBS
 ```mermaid
 gantt
