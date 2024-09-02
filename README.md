@@ -104,27 +104,27 @@ erDiagram
 
 ## 기능
 
-![wireframe](.\media\img\wireframe.PNG)
+![wireframe](.\img\wireframe.PNG)
 
 |메인|게시물|
 |-|-|
-|![base](.\media\img\home.PNG)|![list](.\media\img\posts.PNG)|
+|![base](.\img\home.PNG)|![list](.\img\posts.PNG)|
 
 |게시물 상세|게시물 수정및 추가|
 |-|-|
-|![detail](.\media\img\detail.PNG)|![update](.\media\img\update.PNG)|
+|![detail](.\img\detail.PNG)|![update](.\img\update.PNG)|
 
 |게시물 삭제|태그별 검색|
 |-|-|
-|![delete](.\media\img\delete.PNG)|![tagsearch](.\media\img\tagsearch.PNG)|
+|![delete](.\img\delete.PNG)|![tagsearch](.\img\tagsearch.PNG)|
 
 |회원가입|로그인|
 |-|-|
-|![signup](.\media\img\signup.PNG)|![login](.\media\img\login.PNG)|
+|![signup](.\img\signup.PNG)|![login](.\img\login.PNG)|
 
 |프로필|프로필수정|비밀번호변경|
 |-|-|-|
-|![profile](.\media\img\profile.PNG)|![profileupdate](.\media\img\profileupdate.PNG)|![passupdate](.\media\img\passupdate.PNG)|
+|![profile](.\img\profile.PNG)|![profileupdate](.\img\profileupdate.PNG)|![passupdate](.\img\passupdate.PNG)|
 
 
 ## 느낀점
