@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.core.paginator import Paginator
 from .models import Post, Category, Comment, Tag
 from .forms import PostForm, CommentForm, UserProfileUpdateForm
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
 from django.views.generic.edit import FormMixin
 
 class HomeView(ListView):
@@ -143,24 +143,17 @@ class PostNotFoundView(TemplateView):
 
 #==============================================================
 
-class UserSignupView(FormView):
+class UserSignupView(CreateView):
+    form_class = UserCreationForm
     template_name = 'accounts/user_signup.html'
-    form_class = AuthenticationForm
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        email = form.cleaned_data.get('email', "")
-        nickname = form.cleaned_data.get('nickname', "")
-
-        user = User.objects.create_user(username, email, password)
-        user.first_name = nickname
-        user.save()
-
-        user = authenticate(username=username, password=password)
+        response = super().form_valid(form)
+        user = self.object
         login(self.request, user)
-        return super().form_valid(form)
+        
+        return response
 
 class UserLoginView(FormView):
     template_name = 'accounts/user_login.html'
