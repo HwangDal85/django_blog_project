@@ -100,20 +100,3 @@ erDiagram
 |         | `/profile/`                       | `UserProfileView`       | 유저 프로필                                         |
 |         | `/profile/update/`                | `UserProfileUpdateView` | 프로필 정보 수정                                    |
 |         | `/profile/pass_update/`           | `UserPassUpdateView`    | 비밀번호 변경                                       |
-
-# 기능
-![wireframe](.\blogproj\media\img\wireframe.PNG)
-
-|페이지|기능|
-|-|-|
-|![home]()|홈 화면|
-|![list]()|게시물|
-|![detail]()|게시물 상세|
-|![update]()|게시물 업데이트|
-|![delete]()|게시물 삭제|
-|![tagsearch]()|태그별 검색|
-|![login]()|로그인|
-|![signup]()|회원가입|
-|![profile]()|프로필|
-|![profupdate]()|프로필 수정|
-|![passupdate]()|비밀번호 변경|
