@@ -104,4 +104,32 @@ erDiagram
 
 ## 기능
 
-![wireframe](.\blogproj\media\img\wireframe.PNG)
+![wireframe](.\media\img\wireframe.PNG)
+
+|메인|게시물|
+|-|-|
+|![base](.\media\img\home.PNG)|![list](.\media\img\posts.PNG)|
+
+|게시물 상세|게시물 수정및 추가|
+|-|-|
+|![detail](.\media\img\detail.PNG)|![update](.\media\img\update.PNG)|
+
+|게시물 삭제|태그별 검색|
+|-|-|
+|![delete](.\media\img\delete.PNG)|![tagsearch](.\media\img\tagsearch.PNG)|
+
+|회원가입|로그인|
+|-|-|
+|![signup](.\media\img\signup.PNG)|![login](.\media\img\login.PNG)|
+
+|프로필|프로필수정|비밀번호변경|
+|-|-|-|
+|![profile](.\media\img\profile.PNG)|![profileupdate](.\media\img\profileupdate.PNG)|![passupdate](.\media\img\passupdate.PNG)|
+
+
+## 느낀점
+
+- framework를 이용한다는것이 생각보다 그렇게 쉬운일은 아니었다.
+- FBV -> CBV 바뀌는것은 예상외로 조정해야할 부분이 많이 있었다. 특히 View에 엮여있는 것이 많을수록.
+- 막막하다고 멈춰있는 것 보단 뭐라도 해보는것이 나은 것 같다.
+- 아! 이전 작업(tube clone)에서 accounts와 blog의 앱을 따로 분리한게 괜히하는게 아니구나!
