@@ -25,7 +25,6 @@ class PostListView(ListView):
     def get_queryset(self):
         q = self.request.GET.get("q", "")
         selected_category = self.request.GET.get("category", "")
-        selected_tag = self.request.GET.get("tag", "")
 
         posts = Post.objects.all()
 
@@ -33,8 +32,6 @@ class PostListView(ListView):
             posts = posts.filter(Q(title__icontains=q) | Q(content__icontains=q))
         if selected_category:
             posts = posts.filter(category_id=selected_category)
-        if selected_tag:
-            posts = posts.filter(tags__name__iexact=selected_tag)
         
         return posts.order_by('-created_date')
 
@@ -43,8 +40,6 @@ class PostListView(ListView):
         context['q'] = self.request.GET.get("q", "")
         context['categories'] = Category.objects.all()
         context['selected_category'] = self.request.GET.get("category", "")
-        context['tags'] = Tag.objects.all()
-        context['selected_tag'] = self.request.GET.get("tag", "")
         return context
 
 class PostDetailView(FormMixin, DetailView):
