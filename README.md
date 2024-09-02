@@ -103,29 +103,18 @@ erDiagram
 
 
 ## 기능
-
-![wireframe](.\img\wireframe.PNG)
-
-|메인|게시물|
-|-|-|
-|![base](.\img\home.PNG)|![list](.\img\posts.PNG)|
-
-|게시물 상세|게시물 수정및 추가|
-|-|-|
-|![detail](.\img\detail.PNG)|![update](.\img\update.PNG)|
-
-|게시물 삭제|태그별 검색|
-|-|-|
-|![delete](.\img\delete.PNG)|![tagsearch](.\img\tagsearch.PNG)|
-
-|회원가입|로그인|
-|-|-|
-|![signup](.\img\signup.PNG)|![login](.\img\login.PNG)|
-
-|프로필|프로필수정|비밀번호변경|
-|-|-|-|
-|![profile](.\img\profile.PNG)|![profileupdate](.\img\profileupdate.PNG)|![passupdate](.\img\passupdate.PNG)|
-
+1. 게시물 관련
+  - 게시물 목록
+  - 게시물 상세
+  - 게시물 수정 / 생성
+  - 게시물 삭제
+  - 게시물 댓글기능 / 댓글삭제
+  - 태그별 검색기능
+2. 계정 관련
+  - 계정 생성 (회원가입)
+  - 계정 프로필 확인
+  - 계정 프로필 수정
+  - 계정 비밀번호 변경
 
 ## 느낀점
 
