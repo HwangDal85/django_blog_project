@@ -3,7 +3,7 @@
  Django를 이용하여 실제로 사용 가능한 Blog를 만들어보자.
  본 프로젝트에서는 다양한 사람이 자신이 좋아하는 게임에 관련된 이야기를 할 수 있는 페이지를 만들어 보자.
 
-# WBS
+## WBS
 ```mermaid
 gantt
     title 블로그 프로젝트 일정
@@ -36,7 +36,7 @@ gantt
     블로그 배포 도전                :done, 2024-08-31, 2d
 ```
 
-# ERD
+## ERD
 
 ```mermaid
 erDiagram
@@ -81,7 +81,7 @@ erDiagram
     Post ||--o{ Comment : "has"
     Post }o--|{ Tag : "tags"
 ```
-# URLs
+## URLs
 
 |html 위치   | URL Pattern                       | View Name               | Description                                        |
 |---------|-----------------------------------|-------------------------|----------------------------------------------------|
@@ -102,6 +102,6 @@ erDiagram
 |         | `/profile/pass_update/`           | `UserPassUpdateView`    | 비밀번호 변경                                       |
 
 
-# WireFrame
+## 기능
 
 ![wireframe](.\blogproj\media\img\wireframe.PNG)
