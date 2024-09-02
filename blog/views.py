@@ -151,8 +151,12 @@ class UserSignupView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         user = self.object
+        nickname = self.request.POST.get('nickname')
+        if nickname:
+            user.first_name = nickname
+            user.save()
+
         login(self.request, user)
-        
         return response
 
 class UserLoginView(FormView):
